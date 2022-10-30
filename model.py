@@ -12,20 +12,44 @@ db = SQLAlchemy()
 ##############################################################################
 # Part 1: Compose ORM
 
-# class Brand(db.Model):
-#     """Car brand."""
+class Brand(db.Model):
+    """Car brand."""
 
-#     __tablename__ = "brands"
+    __tablename__ = "brands"
+    
+    brand_id = db.Column(db.String(5), primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    founded = db.Column(db.Integer, nullable=True)
+    headquarters = db.Column(db.String(50), nullable=True)
+    discontinued = db.Column(db.Integer, nullable=True)
+    
+    models = db.relationship("Model", back_populates="brands")
 
-#     pass
+    def __repr__(self):
+       """Show info about brand"""
+       
+       return f"<Brand id={self.brand_id} name={self.name}>"
 
 
-# class Model(db.Model):
-#     """Car model."""
+class Model(db.Model):
+    """Car model."""
 
-#     __tablename__ = "models"
-
-#     pass
+    __tablename__ = "models"
+    
+    model_id = db.Column(db.Integer, autoincrement=True, 
+                         primary_key=True)
+    year = db.Column(db.Integer, nullable=False)
+    brand_id = db.Column(db.String(5), 
+                         db.ForeignKey('brands.brand_id'), nullable=False)
+    name = db.Column(db.String, nullable=False)
+    
+    brands = db.relationship("Brand", back_populates="models")
+    
+    
+    def __repr__(self):
+       """Show info about model"""
+       
+       return f"<Model id={self.model_id} name={self.name}>"
 
 # End Part 1
 
